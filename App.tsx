@@ -4,8 +4,13 @@
  *
  * @format
  */
-
+import { useEffect } from 'react';
+import ReactMoE, {
+  MoEGeoLocation,
+  MoEProperties,
+} from "react-native-moengage";
 import React from 'react';
+//import notifee from '@notifee/react-native';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -15,103 +20,124 @@ import {
   Text,
   useColorScheme,
   View,
+  Button
 } from 'react-native';
 
 import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+   MoEInitConfig, MoEPushConfig, MoEngageLogConfig, MoEngageLogLevel 
+} from "react-native-moengage";
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+//import notifee, { EventType } from '@notifee/react-native';
+// import { 
+//   AndroidColor 
+// } from '@notifee/react-native';
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+ReactMoE.setEventListener("pushTokenGenerated", (payload) => { 
+  console.log("Callback event");
+  console.log("ReactNative AppRunning pushTokenGenerated", payload); 
+});
+
+ReactMoE.setEventListener("pushClicked", (notificationPayload) => { 
+  console.log("ReactNative pushClicked", notificationPayload); 
+});
+
+///inAppInfo is of type MoEInAppData
+ReactMoE.setEventListener("inAppCampaignShown", (inAppInfo) =>
+  console.log("inAppCampaignShown", inAppInfo)
+);
+///inAppInfo is of type MoEClickData
+ReactMoE.setEventListener("inAppCampaignClicked", (inAppInfo) =>
+  console.log("inAppCampaignClicked", inAppInfo)
+);
+///inAppInfo is of type MoEInAppData
+ReactMoE.setEventListener("inAppCampaignDismissed", (inAppInfo) =>
+  console.log("inAppCampaignDismissed", inAppInfo)
+);
+///inAppInfo is of type MoEClickData
+ReactMoE.setEventListener("inAppCampaignCustomAction", (inAppInfo) =>
+  console.log("inAppCampaignCustomAction", inAppInfo)
+);
+
+function App() {
+
+
+
+  async function onDisplayNotification() {
+    
+    let properties = new MoEProperties();
+    properties.addAttribute("quantity", true);
+    properties.addAttribute("product", "iPhone");
+
+    ReactMoE.trackEvent("Purchase", properties);
+    console.log("Event Triggered")
+
+    // Request permissions (required for iOS)
+    // await notifee.requestPermission()
+
+    // // Create a channel (required for Android)
+    // const channelId = await notifee.createChannel({
+    //   id: 'default',
+    //   name: 'Default Channel',
+    // });
+
+    // // Display a notification
+    // await notifee.displayNotification({
+    //   title: 'Notification Title',
+    //   body: 'Main body content of the notification',
+    //   android: {
+    //     channelId,
+    //     smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
+    //     // pressAction is needed if you want the notification to open the app when pressed
+    //     pressAction: {
+    //       id: 'default',
+    //     },
+    //   },
+    // });
+  }
+
+  // useEffect(() => {
+  //   return notifee.onForegroundEvent(({ type, detail }) => {
+  //     switch (type) {
+  //       case EventType.DISMISSED:
+  //         console.log('User dismissed notification', detail.notification);
+  //         break;
+  //       case EventType.PRESS:
+  //         console.log('User pressed notification', detail.notification);
+  //         break;
+  //     }
+  //   });
+  // }, []);
+  
+
+	ReactMoE.initialize("WGG2W8ZZWNKRDE2PZX33401W");
+  ReactMoE.registerForPush();
+  ReactMoE.setUserUniqueID("ajit.rn1@yopmail.com");
+  ReactMoE.setUserName("ReactRN1");
+  ReactMoE.setUserFirstName("Ajit");
+  ReactMoE.setUserLastName("ReactNative1");
+  ReactMoE.setUserEmailID("ajit.rn1@yopmail.com");
+  ReactMoE.setUserContactNumber("9999900000");
+  ReactMoE.setUserGender("Male");
+  ReactMoE.showInApp()
+
+  console.log("ReactNative AppRunning");
+
+  return(
+<SafeAreaView>
+    <View>
+    <Text style={styles.text}> Welcome To MoEngage </Text >
+    <Text style={styles.text}> The best marketing tool</Text>
+    <Button title="Display Notification" onPress={() => onDisplayNotification()} />
     </View>
-  );
-}
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+  </SafeAreaView>
+  )
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  text: {
+    fontSize: 30, // Change the font size as per requirement
+    fontFamily: 'Arial', // Change the font family as per requirement
+    color: 'red', // Change the font color as per requirement
   },
 });
 
