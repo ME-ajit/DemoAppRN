@@ -109,14 +109,9 @@ function App() {
   // }, []);
   
 
-	ReactMoE.initialize("WGG2W8ZZWNKRDE2PZX33401W");
+	ReactMoE.initialize(""); //
   ReactMoE.registerForPush();
-  ReactMoE.setUserUniqueID("ajit.rn1@yopmail.com");
-  ReactMoE.setUserName("ReactRN1");
-  ReactMoE.setUserFirstName("Ajit");
-  ReactMoE.setUserLastName("ReactNative1");
-  ReactMoE.setUserEmailID("ajit.rn1@yopmail.com");
-  ReactMoE.setUserContactNumber("9999900000");
+  ReactMoE.setUserUniqueID(""); //Set Unique ID
   ReactMoE.setUserGender("Male");
   ReactMoE.showInApp()
 
